@@ -2,7 +2,13 @@ import Chat from '../models/chat.model.js'
 
 // add Message to chat
 export function addMessage (req, res) {
-    Chat.create(req.body).then(newMsg => {
+    const messageData = {
+        name: req.user.username,
+        message: req.body.message,
+        userID: req.user.id
+    };
+
+    Chat.create(messageData).then(newMsg => {
         if (res) {
             res.status(201).json(newMsg);
         }

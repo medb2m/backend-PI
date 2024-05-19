@@ -1,4 +1,6 @@
 import { addMessage } from '../controllers/chat.controller.js';
+import User from '../models/user.model.js';
+import jwt from 'jsonwebtoken';
 
 export function handleSocketEvents(io) {
     // verify User
@@ -23,28 +25,20 @@ export function handleSocketEvents(io) {
     });
 
     io.on('connection', (socket) => {
-        console.log('A user connected');
-
-        socket.on('send name', (username) => {
-            socket.username = username;
-            console.log('Username:', username);
-            // broadcast name
-            io.emit('send name', (username));
-        });
+        console.log('User connected : ', socket.user.username);
 
         socket.on('send message', (msg) => {
-            console.log('Message:', msg);
-            if (socket.username) {
-                const message = {
-                    name: socket.username,
+            if (socket.user) {
+                const messageData = {
+                    userID : socket.user._id,
+                    name: socket.user.username,
                     message: msg
                 };
                 // Save the msg in DB
-                addMessage({ body: message }, null);
+                addMessage({ body: messageData, user: socket.user }, null);
                 // broadcast msg
-                io.emit('receive message', message);
+                io.emit('receive message', messageData);
             }
-            io.emit('send message', (msg)); 
         });
 
         socket.on('disconnect', () => {

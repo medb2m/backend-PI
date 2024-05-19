@@ -32,6 +32,7 @@ export default function authorize(roles = []) {
             // authentication and authorization successful
             req.user.role = user.role;
             req.user.ownsToken = token => !!refreshTokens.find(x => x.token === token);
+            req.user.username = user.username;
             next();
         }
     ];
