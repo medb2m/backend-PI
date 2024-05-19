@@ -25,19 +25,21 @@ export function handleSocketEvents(io) {
     });
 
     io.on('connection', (socket) => {
-        console.log('User connected : ', socket.user.username);
+        console.log('User connected : ', socket.user.firstname);
 
-        socket.on('send message', (msg) => {
+        socket.on('send message', async ({ claimID, receiverID, message}) => {
             if (socket.user) {
                 const messageData = {
-                    userID : socket.user._id,
-                    name: socket.user.username,
-                    message: msg
+                    senderID : socket.user._id,
+                    receiverID,
+                    claimID,
+                    senderName: socket.user.firstname,
+                    message
                 };
                 // Save the msg in DB
-                addMessage({ body: messageData, user: socket.user }, null);
-                // broadcast msg
-                io.emit('receive message', messageData);
+                await addMessage({ body: messageData, user: socket.user }, null);
+                // Emit message to receiver only
+                socket.to(receiverID).emit('receive message', messageData);
             }
         });
 

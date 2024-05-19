@@ -7,6 +7,7 @@ const ClaimSchema = new Schema({
   description: String,
   status: { type: String, enum: ['Open', 'In Progress', 'Closed'], default: 'Open' },
   author: { type: Schema.Types.ObjectId, ref: 'User'  },
+  assignedTo: { type: Schema.Types.ObjectId, ref: 'User' },
   createdAt: { type: Date, default: Date.now }
 });
 
