@@ -2,20 +2,24 @@ import Comment from '../models/postComment.model.js'
 
 // Create a new comment
 export const createComment = async (req, res) => {
-  const comment = new Comment(req.body)
+  const comment = new Comment({
+    ...req.body,
+    author:req.user._id,
+    post : req.params.postId
+  })
   await comment.save()
   res.status(201).json(comment)
 }
 
 // Get all comments
-export const getAllComments = async (req, res) => {
-  const comments = await Comment.find().populate('content').populate('author').populate('createdAt')
+export const getAllCommentsForPost = async (req, res) => {
+  const comments = await Comment.find({ post : req.params.postId}).populate('content').populate('author', 'firstName lastName').populate('createdAt')
   res.json(comments)
 }
 
 // Get a single comment by id
 export const getCommentById = async (req, res) => {
-  const comment = await Comment.findById(req.params.id).populate('content').populate('author').populate('createdAt')
+  const comment = await Comment.findById(req.params.id).populate('content').populate('author', 'firstName lastName').populate('createdAt')
   if (!comment) {
     return res.status(404).json({ message: 'comment not found' })
   }

@@ -25,7 +25,7 @@ export function handleSocketEvents(io) {
     });
 
     io.on('connection', (socket) => {
-        console.log('User connected : ', socket.user.firstname);
+        console.log('User connected : ', socket.user.firstName);
 
         socket.on('send message', async ({ claimID, receiverID, message}) => {
             if (socket.user) {
@@ -33,7 +33,7 @@ export function handleSocketEvents(io) {
                     senderID : socket.user._id,
                     receiverID,
                     claimID,
-                    senderName: socket.user.firstname,
+                    senderName: socket.user.firstName,
                     message
                 };
                 // Save the msg in DB

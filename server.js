@@ -64,6 +64,9 @@ app.get('/', (req, res) => {
 
 // Put routes here
 
+app.use("/img" ,express.static("public/images"))
+
+
 // auth routes
 app.use('/user', userRoutes);
 // course routes
@@ -73,7 +76,7 @@ app.use('/video', videoRoutes);
 // category routes
 app.use('/category', categoryRoutes);
 // api Blog 
-app.use('/api', blogRoutes);
+app.use('/blog', blogRoutes);
 // Claim Routers 
 app.use('/claim', claimRoutes);
 // Chat Routers 
