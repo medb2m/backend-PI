@@ -1,21 +1,13 @@
 import express from 'express';
-import * as certificateController from '../controllers/certificate.controller.js';
+import { getCertificateById, getAllCertificates, getCertificatesByCourse, deleteOnce } from '../controllers/certificate.controller.js';
+import authorize from '../_middleware/authorize.js';
+import Role from '../_helpers/role.js';
 
 const router = express.Router();
 
-// Create a new certificate
-router.post('/', certificateController.createCertificate);
-
-// Get all certificates
-router.get('/', certificateController.getAllCertificates);
-
-// Get a single certificate by id
-router.get('/:id', certificateController.getCertificateById);
-
-// Update a certificate by id
-router.put('/:id', certificateController.updateCertificateById);
-
-// Delete a certificate by id
-router.delete('/:id', certificateController.deleteCertificateById);
+router.get('/:id', authorize(), getCertificateById);
+router.get('/',  getAllCertificates);
+router.get('/course/:courseId', authorize(), getCertificatesByCourse);
+router.delete('/:id', deleteOnce)
 
 export default router;

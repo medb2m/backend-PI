@@ -1,12 +1,14 @@
 import express from 'express';
-import { createVideo, getAllVideos, getVideoById, updateVideoById, deleteVideoById } from '../controllers/video.controller.js';
+import { createVideo, getAllVideosByCourseId, getVideoById, deleteVideoById } from '../controllers/video.controller.js';
+import authorize from '../_middleware/authorize.js'
+import { uploadVideo } from '../_middleware/multerConfig.js';
+
 
 const router = express.Router();
 
-router.post('/add', createVideo);
-router.get('/getall', getAllVideos);
-router.get('/get/:id', getVideoById);
-router.put('/update/:id', updateVideoById);
-router.delete('/delete/:id', deleteVideoById);
+router.post('/add/:courseId', authorize(), uploadVideo, createVideo);
+router.get('/getall/:courseId', authorize(), getAllVideosByCourseId);
+router.get('/get/:id', authorize(), getVideoById);
+router.delete('/delete/:id', authorize(), deleteVideoById);
 
 export default router;

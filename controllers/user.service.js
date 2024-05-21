@@ -1,4 +1,4 @@
-﻿import config from '../config.json' assert { type: 'json' };
+﻿import { config } from '../_helpers/config.js'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
@@ -10,7 +10,7 @@ import RefreshToken from '../models/refresh-token.model.js'
 
 function generateJwtToken (user) {
     // create a jwt token containing the User id that expires in 15 minutes
-    return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '15m' });
+    return jwt.sign({ sub: user.id, id: user.id }, config.secret, { expiresIn: '60m' })
 }
 
 function generateRefreshToken (user, ipAddress) {
@@ -20,34 +20,34 @@ function generateRefreshToken (user, ipAddress) {
         token: randomTokenString(),
         expires: new Date(Date.now() + 7*24*60*60*1000),
         createdByIp: ipAddress
-    });
+    })
 }
    
 function randomTokenString() {
-    return crypto.randomBytes(40).toString('hex');
+    return crypto.randomBytes(40).toString('hex')
 }
 
 
 function basicDetails(user){
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = user;
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified };
+    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = user
+    return { id, title, firstName, lastName, email, role, created, updated, isVerified }
 }
 
 async function getUser(id){
-    if (!isValidId(id)) throw 'User not found';
-    const user = await User.findById(id);
-    if (!user) throw 'User not found';
+    if (!isValidId(id)) throw 'User not found'
+    const user = await User.findById(id)
+    if (!user) throw 'User not found'
     return user;
 }
 
 async function getRefreshToken (token) {
-    const refreshToken = await RefreshToken.findOne({ token }).populate('user');
-    if (!refreshToken || !refreshToken.isActive) throw 'Invalid token';
-    return refreshToken;
+    const refreshToken = await RefreshToken.findOne({ token }).populate('user')
+    if (!refreshToken || !refreshToken.isActive) throw 'Invalid token'
+    return refreshToken
 }
 
 function hash(password){
-    return bcrypt.hashSync(password, 10);
+    return bcrypt.hashSync(password, 10)
 }
 
 

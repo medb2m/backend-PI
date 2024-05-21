@@ -1,21 +1,17 @@
 import express from 'express';
-import * as quizController from '../controllers/quiz.controller.js';
+import { createQuiz, getAllQuizzes, getQuizById, updateQuizById, deleteQuizById, takeQuiz, getQuizbyCourseID} from '../controllers/quiz.controller.js';
+import authorize from '../_middleware/authorize.js';
+import Role from '../_helpers/role.js';
+import checkEnrollment from '../_middleware/checkEnrollement.js';
 
 const router = express.Router();
 
-// Create a new quiz
-router.post('/', quizController.createQuiz);
-
-// Get all quizzes
-router.get('/', quizController.getAllQuizzes);
-
-// Get a single quiz by id
-router.get('/:id', quizController.getQuizById);
-
-// Update a quiz by id
-router.put('/:id', quizController.updateQuizById);
-
-// Delete a quiz by id
-router.delete('/:id', quizController.deleteQuizById);
+router.post('/add/:courseId', authorize(), createQuiz);
+router.get('/', getAllQuizzes);
+router.get('/:id', authorize(), getQuizById);
+router.get('/:courseId', authorize(), getQuizbyCourseID);
+router.put('/:id', authorize(Role.User), updateQuizById);
+router.delete('/:id', authorize(Role.User), deleteQuizById);
+router.post('/take/:courseId', authorize(), checkEnrollment,takeQuiz);
 
 export default router;

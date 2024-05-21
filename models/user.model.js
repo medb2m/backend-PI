@@ -1,6 +1,14 @@
 import mongoose from 'mongoose'
 
-const {Schema,model} = mongoose
+const { Schema, model } = mongoose;
+
+const AchievementSchema = new Schema({
+    courseId: { type: Schema.Types.ObjectId, ref: 'Course' },
+    quizId: { type: Schema.Types.ObjectId, ref: 'Quiz' },
+    score: Number,
+    passed: Boolean,
+    date: { type: Date, default: Date.now }
+});
 
 const UserSchema = new Schema({
     email: { type: String, unique: true, required: true },
@@ -18,7 +26,8 @@ const UserSchema = new Schema({
     },
     passwordReset: Date,
     created: { type: Date, default: Date.now },
-    updated: Date
+    updated: Date,
+    achievements: [AchievementSchema]
 });
 
 UserSchema.virtual('isVerified').get(function () {
@@ -29,7 +38,7 @@ UserSchema.set('toJSON', {
     virtuals: true,
     versionKey: false,
     transform: function (doc, ret) {
-        // to remove when serialezd
+        // to remove when converted
         delete ret._id;
         delete ret.passwordHash;
     }

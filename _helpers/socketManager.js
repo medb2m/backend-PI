@@ -1,9 +1,13 @@
 import { addMessage } from '../controllers/chat.controller.js';
 import User from '../models/user.model.js';
 import jwt from 'jsonwebtoken';
+import { config } from './config.js';
+
+const { secret } = config
+
 
 export function handleSocketEvents(io) {
-    // verify User
+    // Verify User
     io.use(async (socket, next) => {
         const token = socket.handshake.auth.token;
         if (!token) {
@@ -25,18 +29,32 @@ export function handleSocketEvents(io) {
     });
 
     io.on('connection', (socket) => {
-        console.log('User connected : ', socket.user.firstName);
+        console.log('User connected:', socket.user.firstName);
 
-        socket.on('send message', async ({ claimID, receiverID, message}) => {
+        // WebRTC signaling
+        socket.on('offer', (payload) => {
+            io.to(payload.target).emit('offer', payload);
+        });
+
+        socket.on('answer', (payload) => {
+            io.to(payload.target).emit('answer', payload);
+        });
+
+        socket.on('ice-candidate', (incoming) => {
+            io.to(incoming.target).emit('ice-candidate', incoming.candidate);
+        });
+
+        // Handle chat messages
+        socket.on('send message', async ({ claimID, receiverID, message }) => {
             if (socket.user) {
                 const messageData = {
-                    senderID : socket.user._id,
+                    senderID: socket.user._id,
                     receiverID,
                     claimID,
                     senderName: socket.user.firstName,
                     message
                 };
-                // Save the msg in DB
+                // Save the message in DB
                 await addMessage({ body: messageData, user: socket.user }, null);
                 // Emit message to receiver only
                 socket.to(receiverID).emit('receive message', messageData);

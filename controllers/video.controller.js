@@ -2,40 +2,72 @@ import Video from '../models/video.model.js';
 
 // Create a new video
 export const createVideo = async (req, res) => {
-  const video = new Video(req.body);
-  await video.save();
-  res.status(201).json(video);
+  try {
+    if (!req.file){
+      return res.status(400).json({ message : 'Please upload a video'})
+    }
+    const video = new Video({
+      title : req.body.title,
+      url : `${req.protocol}://${req.get('host')}/vid/${req.file.filename}`,
+      length: req.body.length,
+      course : req.params.courseId
+    })
+    await video.save()
+    res.status(201).json(video)
+  } catch (error){
+    res.status(500).json({message : 'Error while uploading the video.'})
+  }
+}
+
+// Fonction pour récupérer toutes les vidéos d'un cours spécifique
+export const getAllVideosByCourseId = async (req, res) => {
+  try {
+    const courseId = req.params.courseId;
+
+    // Recherche de toutes les vidéos associées au cours spécifié
+    const videos = await Video.find({ course: courseId });
+
+    // Vérification si des vidéos ont été trouvées
+    if (!videos || videos.length === 0) {
+      return res.status(404).json({ message: 'No videos found for this course' });
+    }
+
+    // Envoi des vidéos trouvées en réponse
+    res.json(videos);
+  } catch (error) {
+    // Gestion des erreurs
+    console.error('Error while retrieving videos by course ID:', error);
+    res.status(500).json({ message: 'Error while retrieving videos by course ID' });
+  }
 };
 
-// Get all videos
-export const getAllVideos = async (req, res) => {
-  const videos = await Video.find().populate('course');
-  res.json(videos);
-};
 
 // Get a single video by id
 export const getVideoById = async (req, res) => {
-  const video = await Video.findById(req.params.id).populate('course');
-  if (!video) {
-    return res.status(404).json({ message: 'Video not found' });
+  try {
+    const videoId = req.params.id;
+    const video = await Video.findById(videoId);
+    if (!video) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+    res.json(video);
+  } catch (error) {
+    console.error('Error while retrieving video by ID:', error);
+    res.status(500).json({ message: 'Error while retrieving video by ID' });
   }
-  res.json(video);
 };
 
-// Update a video by id
-export const updateVideoById = async (req, res) => {
-  const video = await Video.findByIdAndUpdate(req.params.id, req.body, { new: true });
-  if (!video) {
-    return res.status(404).json({ message: 'Video not found' });
-  }
-  res.json(video);
-};
-
-// Delete a video by id
+// Delete a video By ID
 export const deleteVideoById = async (req, res) => {
-  const video = await Video.findByIdAndDelete(req.params.id);
-  if (!video) {
-    return res.status(404).json({ message: 'Video not found' });
+  try {
+    const videoId = req.params.id;
+    const deletedVideo = await Video.findByIdAndDelete(videoId);
+    if (!deletedVideo) {
+      return res.status(404).json({ message: 'Video not found' });
+    }
+    res.json({ message: 'Video deleted successfully' });
+  } catch (error) {
+    console.error('Error while deleting video by ID:', error);
+    res.status(500).json({ message: 'Error while deleting video by ID' });
   }
-  res.json({ message: 'Video deleted' });
 };

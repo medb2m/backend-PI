@@ -1,5 +1,5 @@
 import jwt from 'express-jwt'
-import config from '../config.json' assert { type: 'json' };
+import { config } from '../_helpers/config.js'
 import User from '../models/user.model.js'
 import RefreshToken from '../models/refresh-token.model.js'
 

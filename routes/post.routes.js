@@ -3,12 +3,12 @@ import { createPost, getAllPosts, getPostById, updatePostById, deletePostById } 
 import { createComment, getAllCommentsForPost, getCommentById, updateCommentById, deleteCommentById } from '../controllers/postComment.controller.js';
 import authorize from '../_middleware/authorize.js'
 import Role from '../_helpers/role.js';
-import multer from '../_middleware/multer-config.js';
+import {uploadImage} from '../_middleware/multerConfig.js';
 
 const router = express.Router();
 
 // Routes pour les posts
-router.post('/posts', authorize(), multer, createPost);
+router.post('/posts', authorize(), uploadImage, createPost);
 router.get('/posts', getAllPosts); 
 router.get('/posts/:id', getPostById);
 router.put('/posts/:id', authorize(), updatePostById);
