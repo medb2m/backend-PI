@@ -81,9 +81,9 @@ app.use("/vid" ,express.static("public/videos"))
 
 
 // auth routes
-app.use('/user', userRoutes);
+app.use('/accounts', userRoutes);
 // course routes
-app.use('/course', courseRoutes);
+app.use('/courses', courseRoutes);
 // video routes
 app.use('/video', videoRoutes);
 // category routes

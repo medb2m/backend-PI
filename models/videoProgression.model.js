@@ -1,4 +1,3 @@
-// models/videoProgress.model.js
 import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
