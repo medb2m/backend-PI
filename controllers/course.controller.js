@@ -1,4 +1,5 @@
     import Course from '../models/course.model.js';
+    import { associateCourseWithCategory} from './category.controller.js'
 
     // Create a new course
     export const createCourse = async (req, res) => {
@@ -47,29 +48,42 @@
 
     // Get a single course by id
     export const getCourseById = async (req, res) => {
-    const course = await Course.findById(req.params.id).populate('creator').populate('videos').populate('students').populate('category');
-    if (!course) {
-        return res.status(404).json({ message: 'Course not found' });
-    }
-    res.json(course);
+      try {
+        const course = await Course.findById(req.params.id).populate('creator').populate('videos').populate('category');
+        if (!course) {
+          return res.status(404).json({ message: 'Course not found' });
+        }
+        res.json(course);
+      } catch (error) {
+        res.status(500).json({ message: 'Error getting one course', error: error.message  });
+      }
     };
 
     // Update a course by id
     export const updateCourseById = async (req, res) => {
-    const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    if (!course) {
-        return res.status(404).json({ message: 'Course not found' });
-    }
-    res.json(course);
+      try {
+        
+        const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!course) {
+          return res.status(404).json({ message: 'Course not found' });
+        }
+        res.json(course);
+      } catch (error) {
+        res.status(500).json({ message: 'Error Updating course', error: error.message });
+      }
     };
 
     // Delete a course by id
     export const deleteCourseById = async (req, res) => {
-    const course = await Course.findByIdAndDelete(req.params.id);
+    try {
+      const course = await Course.findByIdAndDelete(req.params.id);
     if (!course) {
         return res.status(404).json({ message: 'Course not found' });
     }
     res.json({ message: 'Course deleted' });
+    } catch (error) {
+      res.status(500).json({ message: 'Error Deleting course', error: error.message });
+    }
     };
 
     export const enrollInCourse = async (req, res) => {
@@ -96,4 +110,17 @@
       } catch (error) {
           res.status(500).json({ message: 'Error enrolling in course', error: error.message });
       }
+  }
+
+
+  export const getCourseCreator = async (req, res) => {
+    try {
+      const creator = await Course.find(req.params.id)
+      if (!creator) {
+        return res.status(404).json({ message: 'Creator not found' });
+      }
+      res.json(creator);
+    } catch (error) {
+      res.status(500).json({ message: 'Error getting course creator', error: error.message  });
+    }
   }

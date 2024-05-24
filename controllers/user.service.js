@@ -64,7 +64,7 @@ async function sendVerificationEmail(user, origin) {
 
     await sendEmail({
         to: user.email,
-        subject: 'MegaLearn - Verify Email',
+        subject: 'Lamine - Verify Email',
         html: `<h4>Verify Email</h4>
                <p>Thanks for registering!</p>
                ${message}`
@@ -169,7 +169,6 @@ const UserService = {
             // send already registered error in email to prevent User enumeration
             return await sendAlreadyRegisteredEmail(params.email, origin);
         }
-    
         // create User object
         const user = new User(params);
     

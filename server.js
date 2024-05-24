@@ -87,7 +87,7 @@ app.use('/courses', courseRoutes);
 // video routes
 app.use('/video', videoRoutes);
 // category routes
-app.use('/category', categoryRoutes);
+app.use('/categories', categoryRoutes);
 // api Blog 
 app.use('/blog', blogRoutes);
 // Claim Routers 

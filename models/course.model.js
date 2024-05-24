@@ -6,10 +6,12 @@ const CourseSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  creator: { type: Schema.Types.ObjectId, ref: 'User', required : true },
-  category: { type: Schema.Types.ObjectId, ref: 'Category', required : true },
+  duration: { type: Number},
+  creator: { type: Schema.Types.ObjectId, ref: 'User'},
+  category: { type: Schema.Types.ObjectId, ref: 'Category'},
   videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }],
   enrolls: [{ type: Schema.Types.ObjectId, ref: 'User' }]
-});
+},{timestamps : true}
+);
 
 export default model('Course', CourseSchema);
