@@ -4,10 +4,24 @@
     // Create a new course
     export const createCourse = async (req, res) => {
         try {
-          const { title, description, price } = req.body;
+          const { title, description, price, category, duration, sections } = req.body;
           const creatorId = req.user._id;
-      
-          const course = new Course({ title, description, price, creator: creatorId });
+
+          const coursedata = { 
+            title, 
+            description, 
+            price, 
+            category, 
+            duration, 
+            sections : JSON.parse(sections),
+            creator : creatorId
+          }
+          
+          if (req.file) {
+            coursedata.image = `${req.protocol}://${req.get('host')}/img/${req.file.filename}`
+          }
+
+          const course = new Course(coursedata)
           await course.save();
           res.status(201).json(course);
         } catch (error) {
@@ -42,14 +56,14 @@
 
     // Get all courses
     export const getAllCourses = async (req, res) => {
-    const courses = await Course.find().populate('creator').populate('videos')
+    const courses = await Course.find().populate('creator').populate('sections')
     res.json(courses);
     };
 
     // Get a single course by id
     export const getCourseById = async (req, res) => {
       try {
-        const course = await Course.findById(req.params.id).populate('creator').populate('videos').populate('category');
+        const course = await Course.findById(req.params.id).populate('creator').populate('sections').populate('category');
         if (!course) {
           return res.status(404).json({ message: 'Course not found' });
         }
@@ -62,8 +76,24 @@
     // Update a course by id
     export const updateCourseById = async (req, res) => {
       try {
+        const { title, description, price, category, duration, sections } = req.body
+      
+          const coursedata = { 
+            title, 
+            description, 
+            price, 
+            category, 
+            duration, 
+            sections : JSON.parse(sections),
+          }
+
+
+          if (req.file) {
+            coursedata.image = `${req.protocol}://${req.get('host')}/img/${req.file.filename}`
+          }
+
         
-        const course = await Course.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const course = await Course.findByIdAndUpdate(req.params.id, coursedata, { new: true });
         if (!course) {
           return res.status(404).json({ message: 'Course not found' });
         }

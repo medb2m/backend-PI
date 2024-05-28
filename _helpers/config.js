@@ -3,13 +3,11 @@ export const config = {
     secret: "Perpill secret 361!",
     emailFrom: "medobouh@gmail.com",
     smtpOptions: {
-        service: "gmail",
         host: "smtp.gmail.com",
         port: 587,
-        secure : false,
         auth: {
-            user: "medobouh@gmail.com",
-            pass: "BNmyam2121.9921."
+            user: "sarah.mertz@gmail.com",
+            pass: "3c7n6XdpvXHnjyGTr2"
         }
     }
 };

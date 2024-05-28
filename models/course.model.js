@@ -2,14 +2,21 @@ import mongoose from 'mongoose';
 
 const { Schema, model } = mongoose;
 
+const SectionSchema = new Schema({
+  title: { type: String, required: true },
+  videoURL: { type: String, required: true },
+  length: { type: Number, required: true }
+});
+
 const CourseSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },
   price: { type: Number, required: true },
-  duration: { type: Number},
-  creator: { type: Schema.Types.ObjectId, ref: 'User'},
-  category: { type: Schema.Types.ObjectId, ref: 'Category'},
-  videos: [{ type: Schema.Types.ObjectId, ref: 'Video' }],
+  duration: { type: Number , required : true},
+  creator: { type: Schema.Types.ObjectId, ref: 'User' , required : true},
+  category: { type: Schema.Types.ObjectId, ref: 'Category', required : true},
+  sections: [SectionSchema],
+  image: String,
   enrolls: [{ type: Schema.Types.ObjectId, ref: 'User' }]
 },{timestamps : true}
 );

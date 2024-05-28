@@ -47,7 +47,7 @@ app.use(function(req, res, next) {
 });
 
 
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(morgan("dev"))
@@ -85,7 +85,7 @@ app.use('/accounts', userRoutes);
 // course routes
 app.use('/courses', courseRoutes);
 // video routes
-app.use('/video', videoRoutes);
+app.use('/videos', videoRoutes);
 // category routes
 app.use('/categories', categoryRoutes);
 // api Blog 

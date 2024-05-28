@@ -9,11 +9,10 @@ export const createVideo = async (req, res) => {
     const video = new Video({
       title : req.body.title,
       url : `${req.protocol}://${req.get('host')}/vid/${req.file.filename}`,
-      length: req.body.length,
-      course : req.params.courseId
+      length: req.body.length
     })
     await video.save()
-    res.status(201).json(video)
+    res.status(201).json({ url : video.url})
   } catch (error){
     res.status(500).json({message : 'Error while uploading the video.'})
   }
