@@ -8,6 +8,7 @@ const SectionSchema = new Schema({
   length: { type: Number, required: true }
 });
 
+
 const CourseSchema = new Schema({
   title: { type: String, required: true },
   description: { type: String, required: true },

@@ -1,8 +1,16 @@
 import express from 'express';
-import { createCourse, getAllCourses, getCourseById, updateCourseById, deleteCourseById, enrollInCourse, getCourseCreator } from '../controllers/course.controller.js';
 import authorize from '../_middleware/authorize.js'
 import Role from '../_helpers/role.js'
 import { uploadImage } from '../_middleware/multerConfig.js';
+import { 
+    createCourse, 
+    getAllCourses, 
+    getCourseById, 
+    updateCourseById, 
+    deleteCourseById, 
+    enrollUserToCourse, 
+    getCourseCreator, 
+    getEnrolledCoursesByUser } from '../controllers/course.controller.js';
 
 const router = express.Router();
 
@@ -12,6 +20,7 @@ router.get('/get/:id', getCourseById);
 router.put('/update/:id', authorize(), uploadImage, updateCourseById);
 router.delete('/delete/:id', authorize(Role.Admin), deleteCourseById);
 router.get('/creator/:id', getCourseCreator);
-router.post('/enroll/:id', authorize(), enrollInCourse);
+router.post('/enroll/:id', authorize(), enrollUserToCourse);
+router.get('/enrolled-courses', authorize(), getEnrolledCoursesByUser);
 
 export default router;
