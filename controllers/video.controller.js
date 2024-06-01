@@ -9,7 +9,7 @@ export const createVideo = async (req, res) => {
     const video = new Video({
       title : req.body.title,
       url : `${req.protocol}://${req.get('host')}/vid/${req.file.filename}`,
-      length: req.body.length
+      vidDescription: req.body.vidDescription
     })
     await video.save()
     res.status(201).json({ url : video.url})
@@ -27,7 +27,7 @@ export const getAllVideosByCourseId = async (req, res) => {
     const videos = await Video.find({ course: courseId });
 
     // Vérification si des vidéos ont été trouvées
-    if (!videos || videos.length === 0) {
+    if (!videos) {
       return res.status(404).json({ message: 'No videos found for this course' });
     }
 

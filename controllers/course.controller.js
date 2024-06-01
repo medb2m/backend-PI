@@ -205,6 +205,18 @@ export const enrollInCourse = async (req, res) => {
   }
 };
 
+
+export const checkUserEnrolled = async (req, res) => {
+  try {
+    const course = await Course.findById(req.params.courseId)
+    const isEnrolled = course.enrolls.includes(req.user._id)
+    console.log(isEnrolled)
+    return res.status(200).json(isEnrolled)
+  } catch (error) {
+    res.status(500).json({ message: "Error while checking User enrolled", error: error.message });
+  }
+}
+
 export const getCourseCreator = async (req, res) => {
   try {
     const creator = await Course.find(req.params.id);

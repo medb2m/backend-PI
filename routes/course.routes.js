@@ -10,7 +10,8 @@ import {
     deleteCourseById, 
     enrollUserToCourse, 
     getCourseCreator, 
-    getEnrolledCoursesByUser } from '../controllers/course.controller.js';
+    getEnrolledCoursesByUser, 
+    checkUserEnrolled} from '../controllers/course.controller.js';
 
 const router = express.Router();
 
@@ -22,5 +23,6 @@ router.delete('/delete/:id', authorize(Role.Admin), deleteCourseById);
 router.get('/creator/:id', getCourseCreator);
 router.post('/enroll/:id', authorize(), enrollUserToCourse);
 router.get('/enrolled-courses', authorize(), getEnrolledCoursesByUser);
+router.get('/isenrolled/:courseId', authorize(), checkUserEnrolled)
 
 export default router;

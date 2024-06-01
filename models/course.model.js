@@ -5,7 +5,7 @@ const { Schema, model } = mongoose;
 const SectionSchema = new Schema({
   title: { type: String, required: true },
   videoURL: { type: String, required: true },
-  length: { type: Number, required: true }
+  vidDescription: { type: String, required: true }
 });
 
 
