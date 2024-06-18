@@ -23,6 +23,7 @@ import chatRoutes from './routes/chat.routes.js'
 import quizRoutes from './routes/quiz.routes.js'
 import certificateRoutes from './routes/certificate.routes.js'
 import eventRoutes from './routes/event.routes.js'
+import entityRouter from './routes/entity.routes.js'
 
 
 // Express Init
@@ -78,6 +79,8 @@ app.use(cors({ origin: (origin, callback) => callback(null, true), credentials: 
 app.use("/img" ,express.static("public/images"))
 // Videos Routes
 app.use("/vid" ,express.static("public/videos"))
+// Pdfs Routes
+app.use("/pdf" ,express.static("public/pdf"))
 
 
 // auth routes
@@ -100,6 +103,9 @@ app.use('/quiz', quizRoutes);
 app.use('/certificate', certificateRoutes);
 // Events Routers 
 app.use('/event', eventRoutes);
+
+// Entity Router
+app.use('/entity', entityRouter)
 
 
 

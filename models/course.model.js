@@ -22,4 +22,6 @@ const CourseSchema = new Schema({
 },{timestamps : true}
 );
 
+//ourseSchema.index({ title: 'text', description: 'text' });
+
 export default model('Course', CourseSchema);

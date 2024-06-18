@@ -11,7 +11,9 @@ import {
     enrollUserToCourse, 
     getCourseCreator, 
     getEnrolledCoursesByUser, 
-    checkUserEnrolled} from '../controllers/course.controller.js';
+    checkUserEnrolled,
+    searchCourses
+} from '../controllers/course.controller.js';
 
 const router = express.Router();
 
@@ -24,5 +26,6 @@ router.get('/creator/:id', getCourseCreator);
 router.post('/enroll/:id', authorize(), enrollUserToCourse);
 router.get('/enrolled-courses', authorize(), getEnrolledCoursesByUser);
 router.get('/isenrolled/:courseId', authorize(), checkUserEnrolled)
+router.get('/search', searchCourses)
 
 export default router;

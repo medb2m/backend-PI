@@ -29,8 +29,8 @@ function randomTokenString() {
 
 
 function basicDetails(user){
-    const { id, title, firstName, lastName, email, role, created, updated, isVerified } = user
-    return { id, title, firstName, lastName, email, role, created, updated, isVerified }
+    const { id, title, username, firstName, lastName, email, role, created, updated, isVerified, image } = user
+    return { id, title, username, firstName, lastName, email, role, created, updated, isVerified, image }
 }
 
 async function getUser(id){

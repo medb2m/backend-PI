@@ -36,7 +36,7 @@ export const createCourse = async (req, res) => {
 export const enrollUserToCourse = async (req, res) => {
   try {
       const courseId = req.params.id;
-      const userId = req.user._id;
+      const userId = req.user.id;
 
       // Vérifiez si le cours existe
       const course = await Course.findById(courseId);
@@ -64,7 +64,7 @@ export const enrollUserToCourse = async (req, res) => {
       await course.save();
       await user.save();
 
-      res.json({ course, user });
+      res.json({course, user});
   } catch (error) {
       res.status(500).json({ message: error.message });
   }
@@ -103,7 +103,7 @@ export const getEnrolledCoursesByUser = async (req, res) => {
 
 // Get all courses
 export const getAllCourses = async (req, res) => {
-  const courses = await Course.find().populate("creator").populate("sections");
+  const courses = await Course.find().populate("creator").populate("sections").populate('category');
   res.json(courses);
 };
 
@@ -228,5 +228,43 @@ export const getCourseCreator = async (req, res) => {
     res
       .status(500)
       .json({ message: "Error getting course creator", error: error.message });
+  }
+};
+
+// Search courses
+/* export const searchCourses = async (req, res) => {
+  try {
+    const searchTerm = req.query.q;
+    if (!searchTerm) {
+      return res.status(400).json({ message: 'Search term is required' });
+    }
+    const courses = await Course.find({
+      $text: { $search: searchTerm }
+    });
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+}; */
+
+export const searchCourses = async (req, res) => {
+  try {
+    const searchTerm = req.query.q;
+    if (!searchTerm) {
+      return res.status(400).json({ message: 'Search term is required' });
+    }
+
+    // Use a regular expression to find courses that match the search term
+    const regex = new RegExp(searchTerm, 'i'); // 'i' for case-insensitive
+    const courses = await Course.find({
+      $or: [
+        { title: { $regex: regex } },
+        { description: { $regex: regex } }
+      ]
+    });
+
+    res.json(courses);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
