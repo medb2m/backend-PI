@@ -60,9 +60,7 @@ export const getCertificatesByCourse = async (req, res) => {
 
 export const getAllCertificateByUserId = async (req, res) => {
   try {
-    console.log('1 :' + req.user.id)
     const certificates = await Certificate.find({user : req.user.id}).populate('user').populate('course')
-    console.log('2 ' + certificates)
     res.status(200).json(certificates)
   } catch (error){
     res.status(500).json({ message: 'Error fetching certificates', error: error.message });

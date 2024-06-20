@@ -7,9 +7,7 @@ const MeetingSchema = new Schema({
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
   meetingLink: { type: String, required: true },
-  recordingLink: { type: String },
-  createdAt: { type: Date, default: Date.now },
-  updatedAt: { type: Date, default: Date.now }
-});
+  recordingLink: { type: String }
+}, { timestamps: true });
 
 export default model('Meeting', MeetingSchema);

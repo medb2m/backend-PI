@@ -23,6 +23,7 @@ import chatRoutes from './routes/chat.routes.js'
 import quizRoutes from './routes/quiz.routes.js'
 import certificateRoutes from './routes/certificate.routes.js'
 import eventRoutes from './routes/event.routes.js'
+import meetingRoutes from './routes/meeting.routes.js'
 import entityRouter from './routes/entity.routes.js'
 
 
@@ -103,6 +104,7 @@ app.use('/quiz', quizRoutes);
 app.use('/certificate', certificateRoutes);
 // Events Routers 
 app.use('/event', eventRoutes);
+app.use('/meeting', meetingRoutes);
 
 // Entity Router
 app.use('/entity', entityRouter)

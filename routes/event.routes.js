@@ -9,7 +9,8 @@ import {
     addParticipant, 
     participeToEvent, 
     approveParticipant, 
-    disapproveParticipant } from '../controllers/event.controller.js';
+    disapproveParticipant, 
+    createMeetingForEvent} from '../controllers/event.controller.js';
 
 const router = express.Router();
 
@@ -22,6 +23,7 @@ router.post('/addparticipant/:eventId/:participantId', authorize(), addParticipa
 router.post('/:eventId/join', authorize(), participeToEvent);
 router.put('/:eventId/participants/:participantId/approve', authorize(), approveParticipant);
 router.put('/:eventId/participants/:participantId/disapprove', authorize(), disapproveParticipant);
+router.post('/:eventId/meeting', authorize(), createMeetingForEvent);
 
 
 export default router;

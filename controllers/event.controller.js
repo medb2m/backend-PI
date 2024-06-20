@@ -1,13 +1,12 @@
 import Event from '../models/event.model.js'
+import Meeting from '../models/meeting.model.js'
 
 // Create a new event
 export const createEvent = async (req, res) => {
   try {
     const event = new Event({
       ...req.body,
-      host: req.user.id,
-      created: new Date(),
-      updated: new Date()
+      host: req.user.id
     });
     await event.save();
     res.status(201).json(event);
@@ -19,25 +18,25 @@ export const createEvent = async (req, res) => {
 // Get all events
 export const getAllEvents = async (req, res) => {
   try {
-    const events = await Event.find().populate('host').populate('participants');
+    const events = await Event.find().populate('host').populate('participants.user');
     res.status(200).json(events);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving events', error: error.message });
   }
-};
+}
 
 // Get an event by id
 export const getEventById = async (req, res) => {
   try {
-    const event = await Event.findById(req.params.eventId).populate('host').populate('participants');
+    const event = await Event.findById(req.params.eventId).populate('host').populate('participants.user');
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-    res.json(event);
+    res.status(200).json(event);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving event', error: error.message });
   }
-};
+}
 
 // Update an event
 export const updateEvent = async (req, res) => {
@@ -46,11 +45,11 @@ export const updateEvent = async (req, res) => {
     if (!event) {
       return res.status(404).json({ message: 'Event not found' });
     }
-    res.json(event);
+    res.status(200).json(event);
   } catch (error) {
     res.status(500).json({ message: 'Error updating event', error: error.message });
   }
-};
+}
 
 // Delete an event
 export const deleteEvent = async (req, res) => {
@@ -63,7 +62,7 @@ export const deleteEvent = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error deleting event', error: error.message });
   }
-};
+}
 
 // Add participants to the event as the host
 export const addParticipant = async (req, res) => {
@@ -93,7 +92,7 @@ export const addParticipant = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error adding participant', error: error.message });
   }
-};
+}
 
 // Join an event
 export const participeToEvent = async (req, res) => {
@@ -151,7 +150,7 @@ export const approveParticipant = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error approving participant', error: error.message });
   }
-};
+}
 
 // Disapprove and delete a participant's request (host only)
 export const disapproveParticipant = async (req, res) => {
@@ -183,4 +182,48 @@ export const disapproveParticipant = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: 'Error disapproving participant', error: error.message });
   }
-};
+}
+
+// Create a meeting for an event
+export const createMeetingForEvent = async (req, res) => {
+  try {
+    const eventId = req.params.eventId
+    const { startTime, endTime, meetingLink, recordingLink } = req.body;
+    // find event by ID
+    const event = await Event.findById(eventId)
+    if(!event){
+      return res.status(404).json({ message: 'Event not found' });
+    }
+
+    // Check if the start time is on the same day as the event date
+    const eventDate = new Date(event.date);
+    const meetingStartTime = new Date(startTime);
+    if (
+      eventDate.getDate() !== meetingStartTime.getDate() ||
+      eventDate.getMonth() !== meetingStartTime.getMonth() ||
+      eventDate.getFullYear() !== meetingStartTime.getFullYear()
+    ) {
+      return res.status(400).json({ message: 'Meeting date must be the same day as the event date' });
+    }
+
+    const meeting = new Meeting({
+      event: eventId,
+      startTime,
+      endTime,
+      meetingLink,
+      recordingLink
+    });
+    await meeting.save();
+
+    // Add the meeting ID to the event's meetings array
+    event.meetings.push(meeting._id);
+
+    // Save the updated event with the new meeting added
+    await event.save();
+
+    res.status(201).json(meeting);
+  } catch (error) {
+    res.status(500).json({ message: 'Error creating meeting', error: error.message });
+  }
+}
+

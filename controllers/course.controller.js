@@ -1,5 +1,4 @@
 import Course from "../models/course.model.js";
-import { associateCourseWithCategory } from "./category.controller.js";
 import User from "../models/user.model.js";
 
 // Create a new course
@@ -20,9 +19,7 @@ export const createCourse = async (req, res) => {
     };
 
     if (req.file) {
-      coursedata.image = `${req.protocol}://${req.get("host")}/img/${
-        req.file.filename
-      }`;
+      coursedata.image = `${req.protocol}://${req.get("host")}/img/${req.file.filename}`;
     }
 
     const course = new Course(coursedata);
@@ -31,7 +28,7 @@ export const createCourse = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+}
 
 export const enrollUserToCourse = async (req, res) => {
   try {
